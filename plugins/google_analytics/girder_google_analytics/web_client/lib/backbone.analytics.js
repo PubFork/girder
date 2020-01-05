@@ -33,10 +33,10 @@
 
   'use strict';
 
-  var loadUrl = Backbone.History.prototype.loadUrl;
+  let loadUrl = Backbone.History.prototype.loadUrl;
 
   Backbone.History.prototype.loadUrl = function(fragmentOverride) {
-    var matched = loadUrl.apply(this, arguments),
+    let matched = loadUrl.apply(this, arguments),
         gaFragment = this.fragment;
 
     if (!this.options.silent) {
@@ -54,7 +54,7 @@
     }
 
     // Analytics.js
-    var ga;
+    let ga;
     if (window.GoogleAnalyticsObject && window.GoogleAnalyticsObject !== 'ga') {
       ga = window.GoogleAnalyticsObject;
     } else {

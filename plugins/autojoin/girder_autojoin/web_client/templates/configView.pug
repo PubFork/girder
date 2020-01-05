@@ -18,8 +18,8 @@ p.g-autojoin-description.
         tr
           td.g-autojoin-empty(colspan=4) No rules defined.
       each rule, index in rules
-        - var group = groupsById[rule.groupId]
-        - var levelName = levelNames[rule.level]
+        - let group = groupsById[rule.groupId]
+        - let levelName = levelNames[rule.level]
         tr
           td= rule.pattern
           td= group ? group.get('name') : '(group no longer exists)'
