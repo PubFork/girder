@@ -23,31 +23,35 @@ commands:
   install-girder:
     description: "Install Girder in a virtualenv and configure CTest"
     steps:
-#      - run:
-#          name: Generate python environment checksum file
-#          command: ./girder/.circleci/generatePyEnvChecksum.sh > girder/py-env-checksum
-#      - restore_cache:
-#          key: venv-py3.6-{{ arch }}-{{ checksum "girder/py-env-checksum" }}
       - run:
-          name: Create virtual environment
-          command: python3 -m venv girder_env
+          name: Generate python environment checksum file
+          command: ./girder/.circleci/generatePyEnvChecksum.sh > girder/py-env-checksum
+      - restore_cache:
+          key: venv-py3.6-{{ arch }}-{{ checksum "girder/py-env-checksum" }}
+      - run:
+          name: Create virtual environment (if necessary)
+          command: if [ ! -d girder_env ]; then python3 -m venv girder_env; fi
       - run:
           name: Activate virtual environment
           command: echo ". $CIRCLE_WORKING_DIRECTORY/girder_env/bin/activate" >> $BASH_ENV
       - run:
           name: Upgrade Python toolchain
-          command: pip install --upgrade pip setuptools
+          command: python3 -m pip install --upgrade pip setuptools
       - run:
           name: Install Girder
+          # Since the virtual env is cached, attempt to upgrade everything
           command: >-
-            pip install
+            python3 -m pip install
+            --upgrade
+            --upgrade-strategy eager
             --editable .[sftp,mount]
             --editable clients/python
             --requirement requirements-dev.txt
           working_directory: girder
-#      - save_cache:
-#          paths: girder_env
-#          key: venv-py3.6-{{ arch }}-{{ checksum "girder/py-env-checksum" }}
+      - save_cache:
+          paths:
+            - girder_env
+          key: venv-py3.6-{{ arch }}-{{ checksum "girder/py-env-checksum" }}
 
 jobs:
   server-lint-test:
@@ -225,7 +229,7 @@ jobs:
             cmake
             ../girder
             -DPYTHON_VERSION=3.6
-            -DPYTHON_EXECUTABLE=/home/circleci/.virtualenvs/girder/bin/python
+            -DPYTHON_EXECUTABLE=$CIRCLE_WORKING_DIRECTORY/girder_env/bin/python
           working_directory: girder_build
       - run:
           name: make
@@ -282,7 +286,7 @@ jobs:
           path: girder/build/test/artifacts
       - run:
           name: Install Codecov client
-          command: pip install codecov
+          command: python3 -m pip install codecov
       - run:
           name: Upload coverage
           command: >-
