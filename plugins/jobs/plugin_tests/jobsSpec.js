@@ -431,20 +431,27 @@ describe('Unit test the job list widget.', function () {
             // button is disabled when no job is checked
             expect(widget.$('.g-job-check-menu-button').is(':disabled')).toBe(true);
 
-            widget.$('input:checkbox:not(:checked).g-job-checkbox').trigger('click');
-            widget.$('input:checkbox:not(:checked).g-job-checkbox').trigger('click');
-            widget.$('input:checkbox:not(:checked).g-job-checkbox').trigger('click');
+            // widget.$('input:checkbox:not(:checked).g-job-checkbox').trigger('click');
+            // widget.$('input:checkbox:not(:checked).g-job-checkbox').trigger('click');
+            // widget.$('input:checkbox:not(:checked).g-job-checkbox').trigger('click');
+
+            widget.$('input:checkbox:not(:checked).g-job-checkbox')[0].click();
+            widget.$('input:checkbox:not(:checked).g-job-checkbox')[0].click();
+            widget.$('input:checkbox:not(:checked).g-job-checkbox')[0].click();
 
             expect(widget.$('.g-job-check-menu-button').is(':disabled')).toBe(false);
             expect(widget.$('.g-job-checkbox-all').is(':checked')).toBe(true);
-            widget.$('.g-job-checkbox-all').trigger('click');
+            // widget.$('.g-job-checkbox-all').trigger('click');
+            widget.$('.g-job-checkbox-all')[0].click();
 
             expect(widget.$('input:checkbox:not(:checked).g-job-checkbox').length).toBe(3);
 
-            widget.$('.g-job-checkbox-all').trigger('click');
+            // widget.$('.g-job-checkbox-all').trigger('click');
+            widget.$('.g-job-checkbox-all')[0].click();
             expect(widget.$('input:checkbox:not(:checked).g-job-checkbox').length).toBe(0);
 
-            widget.$('.g-jobs-list-cancel').trigger('click');
+            // widget.$('.g-jobs-list-cancel').trigger('click');
+            widget.$('.g-jobs-list-cancel')[0].click();
         });
     });
 
